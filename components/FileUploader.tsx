@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import Image from "next/image";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -13,26 +12,8 @@ type FileUploaderProps = {
 };
 
 export const FileUploader = ({ files, onChange }: FileUploaderProps) => {
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     onChange(acceptedFiles);
-
-    // Convert files to base64 or any suitable format for the API
-    const formData = new FormData();
-    acceptedFiles.forEach((file) => {
-      formData.append("files", file);
-    });
-
-    try {
-      const response = await axios.post("/api/report-analysis", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("Analysis Result:", response.data.analysis);
-    } catch (error) {
-      console.error("Error analyzing report:", error);
-    }
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
