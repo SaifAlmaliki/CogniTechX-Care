@@ -1,3 +1,6 @@
+// This component represents a statistical card used to display key metrics in the healthcare management system.
+// It is designed to provide a quick overview of important statistics to the users.
+
 import clsx from "clsx";
 import Image from "next/image";
 

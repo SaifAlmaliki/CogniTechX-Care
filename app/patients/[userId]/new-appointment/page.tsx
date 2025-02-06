@@ -1,9 +1,13 @@
+// This file defines the Appointment component, which is responsible for rendering the new appointment page for a specific patient.
+// It fetches the patient's information and displays the appointment form.
+
 import Image from "next/image";
 
 import { AppointmentForm } from "@/components/forms/AppointmentForm";
 import { getPatient } from "@/lib/actions/patient.actions";
 
 const Appointment = async ({ params: { userId } }: SearchParamProps) => {
+  // Fetch the patient data using the userId
   const patient = await getPatient(userId);
 
   return (
@@ -18,13 +22,14 @@ const Appointment = async ({ params: { userId } }: SearchParamProps) => {
             className="mb-12 h-10 w-fit"
           />
 
+          {/* Render the appointment form with patient and user IDs */}
           <AppointmentForm
             patientId={patient?.$id}
             userId={userId}
             type="create"
           />
 
-          <p className="copyright mt-10 py-12">© 2024 CarePluse</p>
+          <p className="copyright mt-10 py-12"> 2024 CarePluse</p>
         </div>
       </section>
 

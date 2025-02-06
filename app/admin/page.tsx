@@ -1,3 +1,9 @@
+// Summary:
+// This file serves as the main administrative page for the healthcare management system. It includes components and logic necessary for managing administrative tasks.
+// The page is designed to provide an interface for administrators to perform various operations related to the healthcare system.
+//
+// Inline Comments:
+// Import necessary components and libraries
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,6 +12,7 @@ import { columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/DataTable";
 import { getRecentAppointmentList } from "@/lib/actions/appointment.actions";
 
+// Define the main functional component for the admin page
 const AdminPage = async () => {
   const appointments = await getRecentAppointmentList();
 
@@ -60,4 +67,5 @@ const AdminPage = async () => {
   );
 };
 
+// Export the component for use in other parts of the application
 export default AdminPage;

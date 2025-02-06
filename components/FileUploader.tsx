@@ -1,5 +1,13 @@
 "use client";
 
+// File Overview:
+// The FileUploader component allows users to upload files via drag-and-drop or by clicking to select files.
+// It displays the uploaded image or an upload icon when no files are uploaded.
+
+// Variables:
+// - files: An array of File objects or undefined, representing the files uploaded by the user.
+// - onChange: A callback function that takes an array of File objects as an argument, used to handle file changes.
+
 import Image from "next/image";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -18,6 +26,9 @@ export const FileUploader = ({ files, onChange }: FileUploaderProps) => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
+  // getRootProps is a function provided by the useDropzone hook.
+  // It returns the props that need to be applied to the root dropzone element,
+  // allowing it to handle drag-and-drop events and manage the dropzone state.
   return (
     <div {...getRootProps()} className="file-upload">
       <input {...getInputProps()} />

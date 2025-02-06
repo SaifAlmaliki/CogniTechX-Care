@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// UserFormValidation: Validates user registration form fields
 export const UserFormValidation = z.object({
   name: z
     .string()
@@ -11,7 +12,9 @@ export const UserFormValidation = z.object({
     .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
 });
 
+// PatientFormValidation: Validates patient registration form fields
 export const PatientFormValidation = z.object({
+  // Personal details
   name: z
     .string()
     .min(2, "Name must be at least 2 characters")
@@ -22,6 +25,8 @@ export const PatientFormValidation = z.object({
     .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
   birthDate: z.coerce.date(),
   gender: z.enum(["Male", "Female", "Other"]),
+
+  // Address and occupation
   address: z
     .string()
     .min(5, "Address must be at least 5 characters")
@@ -30,6 +35,8 @@ export const PatientFormValidation = z.object({
     .string()
     .min(2, "Occupation must be at least 2 characters")
     .max(500, "Occupation must be at most 500 characters"),
+
+  // Emergency contact
   emergencyContactName: z
     .string()
     .min(2, "Contact name must be at least 2 characters")
@@ -40,6 +47,8 @@ export const PatientFormValidation = z.object({
       (emergencyContactNumber) => /^\+\d{10,15}$/.test(emergencyContactNumber),
       "Invalid phone number"
     ),
+
+  // Insurance and medical details
   primaryPhysician: z.string().min(2, "Select at least one doctor"),
   insuranceProvider: z
     .string()
@@ -53,6 +62,8 @@ export const PatientFormValidation = z.object({
   currentMedication: z.string().optional(),
   familyMedicalHistory: z.string().optional(),
   pastMedicalHistory: z.string().optional(),
+
+  // Identification and consent
   identificationType: z.string().optional(),
   identificationNumber: z.string().optional(),
   identificationDocument: z.custom<File[]>().optional(),
@@ -76,6 +87,7 @@ export const PatientFormValidation = z.object({
     }),
 });
 
+// CreateAppointmentSchema: Validates appointment creation form fields
 export const CreateAppointmentSchema = z.object({
   primaryPhysician: z.string().min(2, "Select at least one doctor"),
   schedule: z.coerce.date(),
@@ -87,6 +99,7 @@ export const CreateAppointmentSchema = z.object({
   cancellationReason: z.string().optional(),
 });
 
+// ScheduleAppointmentSchema: Validates appointment scheduling form fields
 export const ScheduleAppointmentSchema = z.object({
   primaryPhysician: z.string().min(2, "Select at least one doctor"),
   schedule: z.coerce.date(),
@@ -95,11 +108,11 @@ export const ScheduleAppointmentSchema = z.object({
   cancellationReason: z.string().optional(),
 });
 
+// CancelAppointmentSchema: Validates appointment cancellation form fields
 export const CancelAppointmentSchema = z.object({
   primaryPhysician: z.string().min(2, "Select at least one doctor"),
   schedule: z.coerce.date(),
   reason: z.string().optional(),
-  note: z.string().optional(),
   cancellationReason: z
     .string()
     .min(2, "Reason must be at least 2 characters")

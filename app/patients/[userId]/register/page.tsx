@@ -1,4 +1,3 @@
-// page.tsx
 // This file represents the registration page for a patient.
 // It retrieves user data based on the user ID from the URL and displays a registration form.
 

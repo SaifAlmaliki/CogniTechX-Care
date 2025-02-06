@@ -1,3 +1,8 @@
+// This component renders a modal for scheduling or canceling appointments.
+// It uses a dialog from "@/components/ui/dialog" and an AppointmentForm component
+// to handle the form submission. It receives patientId, userId, appointment (optional),
+// and type ("schedule" or "cancel") as props.
+
 "use client";
 
 import { useState } from "react";
