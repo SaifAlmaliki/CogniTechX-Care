@@ -2,29 +2,16 @@
 // It provides functionality for displaying, sorting, and filtering data in a tabular format, allowing users to easily view and manage information.
 // The DataTable is designed to be reusable and customizable for various data sets throughout the application.
 
-"use client";
+'use client';
 
-import {
-  getPaginationRowModel,
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import Image from "next/image";
-import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import {getPaginationRowModel, ColumnDef, flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
+import Image from 'next/image';
+import {redirect} from 'next/navigation';
+import {useEffect} from 'react';
 
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { decryptKey } from "@/lib/utils";
+import {Button} from '@/components/ui/button';
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
+import {decryptKey} from '@/utils';
 
 /**
  * DataTable Props Interface
@@ -51,20 +38,14 @@ interface DataTableProps<TData, TValue> {
  * @param {DataTableProps} props - The properties passed to the DataTable component.
  * @returns {JSX.Element} - The rendered table component.
  */
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const encryptedKey =
-    typeof window !== "undefined"
-      ? window.localStorage.getItem("accessKey")
-      : null;
+export function DataTable<TData, TValue>({columns, data}: DataTableProps<TData, TValue>) {
+  const encryptedKey = typeof window !== 'undefined' ? window.localStorage.getItem('accessKey') : null;
 
   useEffect(() => {
     const accessKey = encryptedKey && decryptKey(encryptedKey);
 
     if (accessKey !== process.env.NEXT_PUBLIC_ADMIN_PASSKEY!.toString()) {
-      redirect("/");
+      redirect('/');
     }
   }, [encryptedKey]);
 
@@ -72,7 +53,7 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: getPaginationRowModel()
   });
 
   return (
@@ -80,19 +61,10 @@ export function DataTable<TData, TValue>({
       <Table className="shad-table">
         {/* A header row displaying column titles */}
         <TableHeader className=" bg-dark-200">
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id} className="shad-table-row-header">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
+              {headerGroup.headers.map(header => {
+                return <TableHead key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</TableHead>;
               })}
             </TableRow>
           ))}
@@ -100,16 +72,10 @@ export function DataTable<TData, TValue>({
         {/* A body containing rows of data or a 'No results' message if no data is available */}
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className="shad-table-row"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+            table.getRowModel().rows.map(row => (
+              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="shad-table-row">
+                {row.getVisibleCells().map(cell => (
+                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
               </TableRow>
             ))
@@ -125,34 +91,11 @@ export function DataTable<TData, TValue>({
 
       {/* Pagination controls for navigating between pages of data */}
       <div className="table-actions">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          className="shad-gray-btn"
-        >
-          <Image
-            src="/assets/icons/arrow.svg"
-            width={24}
-            height={24}
-            alt="arrow"
-          />
+        <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="shad-gray-btn">
+          <Image src="/assets/icons/arrow.svg" width={24} height={24} alt="arrow" />
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          className="shad-gray-btn"
-        >
-          <Image
-            src="/assets/icons/arrow.svg"
-            width={24}
-            height={24}
-            alt="arrow "
-            className="rotate-180"
-          />
+        <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="shad-gray-btn">
+          <Image src="/assets/icons/arrow.svg" width={24} height={24} alt="arrow " className="rotate-180" />
         </Button>
       </div>
     </div>

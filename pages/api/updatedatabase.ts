@@ -9,7 +9,7 @@ import {DirectoryLoader} from 'langchain/document_loaders/fs/directory';
 import {TextLoader} from 'langchain/document_loaders/fs/text';
 import {NextApiRequest, NextApiResponse} from 'next';
 
-import {updateVectorDB} from '@/lib/utils';
+import {updateVectorDB} from '@/utils';
 
 /**
  * API route handler for database updates

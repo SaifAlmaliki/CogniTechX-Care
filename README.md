@@ -78,6 +78,10 @@ and many more, including code architecture and reusability
 
 ## <a name="quick-start">🤸 Quick Start</a>
 
+## RAG AI with GEMNINI
+
+![alt text](image.png)
+
 Follow these steps to set up the project locally on your machine.
 
 **Prerequisites**
@@ -136,84 +140,79 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 <summary><code>tailwind.config.ts</code></summary>
 
 ```typescript
-import type { Config } from "tailwindcss";
+import type {Config} from 'tailwindcss';
 
-const { fontFamily } = require("tailwindcss/defaultTheme");
+const {fontFamily} = require('tailwindcss/defaultTheme');
 
 const config = {
-  darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-  ],
-  prefix: "",
+  darkMode: ['class'],
+  content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
+  prefix: '',
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: '2rem',
       screens: {
-        "2xl": "1400px",
-      },
+        '2xl': '1400px'
+      }
     },
     extend: {
       colors: {
         green: {
-          500: "#24AE7C",
-          600: "#0D2A1F",
+          500: '#24AE7C',
+          600: '#0D2A1F'
         },
         blue: {
-          500: "#79B5EC",
-          600: "#152432",
+          500: '#79B5EC',
+          600: '#152432'
         },
         red: {
-          500: "#F37877",
-          600: "#3E1716",
-          700: "#F24E43",
+          500: '#F37877',
+          600: '#3E1716',
+          700: '#F24E43'
         },
         light: {
-          200: "#E8E9E9",
+          200: '#E8E9E9'
         },
         dark: {
-          200: "#0D0F10",
-          300: "#131619",
-          400: "#1A1D21",
-          500: "#363A3D",
-          600: "#76828D",
-          700: "#ABB8C4",
-        },
+          200: '#0D0F10',
+          300: '#131619',
+          400: '#1A1D21',
+          500: '#363A3D',
+          600: '#76828D',
+          700: '#ABB8C4'
+        }
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ['var(--font-sans)', ...fontFamily.sans]
       },
       backgroundImage: {
         appointments: "url('/assets/images/appointments-bg.png')",
         pending: "url('/assets/images/pending-bg.png')",
-        cancelled: "url('/assets/images/cancelled-bg.png')",
+        cancelled: "url('/assets/images/cancelled-bg.png')"
       },
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+        'accordion-down': {
+          from: {height: '0'},
+          to: {height: 'var(--radix-accordion-content-height)'}
         },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+        'accordion-up': {
+          from: {height: 'var(--radix-accordion-content-height)'},
+          to: {height: '0'}
         },
-        "caret-blink": {
-          "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
-        },
+        'caret-blink': {
+          '0%,70%,100%': {opacity: '1'},
+          '20%,50%': {opacity: '0'}
+        }
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "caret-blink": "caret-blink 1.25s ease-out infinite",
-      },
-    },
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        'caret-blink': 'caret-blink 1.25s ease-out infinite'
+      }
+    }
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require('tailwindcss-animate')]
 } satisfies Config;
 
 export default config;
@@ -586,12 +585,12 @@ export default config;
 /* eslint-disable no-unused-vars */
 
 declare type SearchParamProps = {
-  params: { [key: string]: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: {[key: string]: string};
+  searchParams: {[key: string]: string | string[] | undefined};
 };
 
-declare type Gender = "Male" | "Female" | "Other";
-declare type Status = "pending" | "scheduled" | "cancelled";
+declare type Gender = 'Male' | 'Female' | 'Other';
+declare type Status = 'pending' | 'scheduled' | 'cancelled';
 
 declare interface CreateUserParams {
   name: string;
@@ -647,7 +646,7 @@ declare type UpdateAppointmentParams = {
 <summary><code>types/appwrite.types.ts</code></summary>
 
 ```typescript
-import { Models } from "node-appwrite";
+import {Models} from 'node-appwrite';
 
 export interface Patient extends Models.Document {
   userId: string;
@@ -691,8 +690,8 @@ export interface Appointment extends Models.Document {
 <summary><code>lib/utils.ts</code></summary>
 
 ```typescript
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import {type ClassValue, clsx} from 'clsx';
+import {twMerge} from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -706,58 +705,46 @@ export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 export const formatDateTime = (dateString: Date | string) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
     // weekday: "short", // abbreviated weekday name (e.g., 'Mon')
-    month: "short", // abbreviated month name (e.g., 'Oct')
-    day: "numeric", // numeric day of the month (e.g., '25')
-    year: "numeric", // numeric year (e.g., '2023')
-    hour: "numeric", // numeric hour (e.g., '8')
-    minute: "numeric", // numeric minute (e.g., '30')
-    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
+    month: 'short', // abbreviated month name (e.g., 'Oct')
+    day: 'numeric', // numeric day of the month (e.g., '25')
+    year: 'numeric', // numeric year (e.g., '2023')
+    hour: 'numeric', // numeric hour (e.g., '8')
+    minute: 'numeric', // numeric minute (e.g., '30')
+    hour12: true // use 12-hour clock (true) or 24-hour clock (false)
   };
 
   const dateDayOptions: Intl.DateTimeFormatOptions = {
-    weekday: "short", // abbreviated weekday name (e.g., 'Mon')
-    year: "numeric", // numeric year (e.g., '2023')
-    month: "2-digit", // abbreviated month name (e.g., 'Oct')
-    day: "2-digit", // numeric day of the month (e.g., '25')
+    weekday: 'short', // abbreviated weekday name (e.g., 'Mon')
+    year: 'numeric', // numeric year (e.g., '2023')
+    month: '2-digit', // abbreviated month name (e.g., 'Oct')
+    day: '2-digit' // numeric day of the month (e.g., '25')
   };
 
   const dateOptions: Intl.DateTimeFormatOptions = {
-    month: "short", // abbreviated month name (e.g., 'Oct')
-    year: "numeric", // numeric year (e.g., '2023')
-    day: "numeric", // numeric day of the month (e.g., '25')
+    month: 'short', // abbreviated month name (e.g., 'Oct')
+    year: 'numeric', // numeric year (e.g., '2023')
+    day: 'numeric' // numeric day of the month (e.g., '25')
   };
 
   const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: "numeric", // numeric hour (e.g., '8')
-    minute: "numeric", // numeric minute (e.g., '30')
-    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
+    hour: 'numeric', // numeric hour (e.g., '8')
+    minute: 'numeric', // numeric minute (e.g., '30')
+    hour12: true // use 12-hour clock (true) or 24-hour clock (false)
   };
 
-  const formattedDateTime: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateTimeOptions
-  );
+  const formattedDateTime: string = new Date(dateString).toLocaleString('en-US', dateTimeOptions);
 
-  const formattedDateDay: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateDayOptions
-  );
+  const formattedDateDay: string = new Date(dateString).toLocaleString('en-US', dateDayOptions);
 
-  const formattedDate: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateOptions
-  );
+  const formattedDate: string = new Date(dateString).toLocaleString('en-US', dateOptions);
 
-  const formattedTime: string = new Date(dateString).toLocaleString(
-    "en-US",
-    timeOptions
-  );
+  const formattedTime: string = new Date(dateString).toLocaleString('en-US', timeOptions);
 
   return {
     dateTime: formattedDateTime,
     dateDay: formattedDateDay,
     dateOnly: formattedDate,
-    timeOnly: formattedTime,
+    timeOnly: formattedTime
   };
 };
 
@@ -776,57 +763,27 @@ export function decryptKey(passkey: string) {
 <summary><code>lib/validation.ts</code></summary>
 
 ```typescript
-import { z } from "zod";
+import {z} from 'zod';
 
 export const UserFormValidation = z.object({
-  name: z
-    .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be at most 50 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z
-    .string()
-    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(50, 'Name must be at most 50 characters'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().refine(phone => /^\+\d{10,15}$/.test(phone), 'Invalid phone number')
 });
 
 export const PatientFormValidation = z.object({
-  name: z
-    .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be at most 50 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z
-    .string()
-    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(50, 'Name must be at most 50 characters'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().refine(phone => /^\+\d{10,15}$/.test(phone), 'Invalid phone number'),
   birthDate: z.coerce.date(),
-  gender: z.enum(["Male", "Female", "Other"]),
-  address: z
-    .string()
-    .min(5, "Address must be at least 5 characters")
-    .max(500, "Address must be at most 500 characters"),
-  occupation: z
-    .string()
-    .min(2, "Occupation must be at least 2 characters")
-    .max(500, "Occupation must be at most 500 characters"),
-  emergencyContactName: z
-    .string()
-    .min(2, "Contact name must be at least 2 characters")
-    .max(50, "Contact name must be at most 50 characters"),
-  emergencyContactNumber: z
-    .string()
-    .refine(
-      (emergencyContactNumber) => /^\+\d{10,15}$/.test(emergencyContactNumber),
-      "Invalid phone number"
-    ),
-  primaryPhysician: z.string().min(2, "Select at least one doctor"),
-  insuranceProvider: z
-    .string()
-    .min(2, "Insurance name must be at least 2 characters")
-    .max(50, "Insurance name must be at most 50 characters"),
-  insurancePolicyNumber: z
-    .string()
-    .min(2, "Policy number must be at least 2 characters")
-    .max(50, "Policy number must be at most 50 characters"),
+  gender: z.enum(['Male', 'Female', 'Other']),
+  address: z.string().min(5, 'Address must be at least 5 characters').max(500, 'Address must be at most 500 characters'),
+  occupation: z.string().min(2, 'Occupation must be at least 2 characters').max(500, 'Occupation must be at most 500 characters'),
+  emergencyContactName: z.string().min(2, 'Contact name must be at least 2 characters').max(50, 'Contact name must be at most 50 characters'),
+  emergencyContactNumber: z.string().refine(emergencyContactNumber => /^\+\d{10,15}$/.test(emergencyContactNumber), 'Invalid phone number'),
+  primaryPhysician: z.string().min(2, 'Select at least one doctor'),
+  insuranceProvider: z.string().min(2, 'Insurance name must be at least 2 characters').max(50, 'Insurance name must be at most 50 characters'),
+  insurancePolicyNumber: z.string().min(2, 'Policy number must be at least 2 characters').max(50, 'Policy number must be at most 50 characters'),
   allergies: z.string().optional(),
   currentMedication: z.string().optional(),
   familyMedicalHistory: z.string().optional(),
@@ -837,58 +794,52 @@ export const PatientFormValidation = z.object({
   treatmentConsent: z
     .boolean()
     .default(false)
-    .refine((value) => value === true, {
-      message: "You must consent to treatment in order to proceed",
+    .refine(value => value === true, {
+      message: 'You must consent to treatment in order to proceed'
     }),
   disclosureConsent: z
     .boolean()
     .default(false)
-    .refine((value) => value === true, {
-      message: "You must consent to disclosure in order to proceed",
+    .refine(value => value === true, {
+      message: 'You must consent to disclosure in order to proceed'
     }),
   privacyConsent: z
     .boolean()
     .default(false)
-    .refine((value) => value === true, {
-      message: "You must consent to privacy in order to proceed",
-    }),
+    .refine(value => value === true, {
+      message: 'You must consent to privacy in order to proceed'
+    })
 });
 
 export const CreateAppointmentSchema = z.object({
-  primaryPhysician: z.string().min(2, "Select at least one doctor"),
+  primaryPhysician: z.string().min(2, 'Select at least one doctor'),
   schedule: z.coerce.date(),
-  reason: z
-    .string()
-    .min(2, "Reason must be at least 2 characters")
-    .max(500, "Reason must be at most 500 characters"),
+  reason: z.string().min(2, 'Reason must be at least 2 characters').max(500, 'Reason must be at most 500 characters'),
   note: z.string().optional(),
-  cancellationReason: z.string().optional(),
+  cancellationReason: z.string().optional()
 });
 
 export const ScheduleAppointmentSchema = z.object({
-  primaryPhysician: z.string().min(2, "Select at least one doctor"),
+  primaryPhysician: z.string().min(2, 'Select at least one doctor'),
   schedule: z.coerce.date(),
   reason: z.string().optional(),
   note: z.string().optional(),
-  cancellationReason: z.string().optional(),
+  cancellationReason: z.string().optional()
 });
 
 export const CancelAppointmentSchema = z.object({
-  primaryPhysician: z.string().min(2, "Select at least one doctor"),
+  primaryPhysician: z.string().min(2, 'Select at least one doctor'),
   schedule: z.coerce.date(),
   reason: z.string().optional(),
   note: z.string().optional(),
-  cancellationReason: z
-    .string()
-    .min(2, "Reason must be at least 2 characters")
-    .max(500, "Reason must be at most 500 characters"),
+  cancellationReason: z.string().min(2, 'Reason must be at least 2 characters').max(500, 'Reason must be at most 500 characters')
 });
 
 export function getAppointmentSchema(type: string) {
   switch (type) {
-    case "create":
+    case 'create':
       return CreateAppointmentSchema;
-    case "cancel":
+    case 'cancel':
       return CancelAppointmentSchema;
     default:
       return ScheduleAppointmentSchema;
@@ -902,91 +853,79 @@ export function getAppointmentSchema(type: string) {
 <summary><code>constants/index.ts</code></summary>
 
 ```typescript
-export const GenderOptions = ["Male", "Female", "Other"];
+export const GenderOptions = ['Male', 'Female', 'Other'];
 
 export const PatientFormDefaultValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
   birthDate: new Date(Date.now()),
-  gender: "Male" as Gender,
-  address: "",
-  occupation: "",
-  emergencyContactName: "",
-  emergencyContactNumber: "",
-  primaryPhysician: "",
-  insuranceProvider: "",
-  insurancePolicyNumber: "",
-  allergies: "",
-  currentMedication: "",
-  familyMedicalHistory: "",
-  pastMedicalHistory: "",
-  identificationType: "Birth Certificate",
-  identificationNumber: "",
+  gender: 'Male' as Gender,
+  address: '',
+  occupation: '',
+  emergencyContactName: '',
+  emergencyContactNumber: '',
+  primaryPhysician: '',
+  insuranceProvider: '',
+  insurancePolicyNumber: '',
+  allergies: '',
+  currentMedication: '',
+  familyMedicalHistory: '',
+  pastMedicalHistory: '',
+  identificationType: 'Birth Certificate',
+  identificationNumber: '',
   identificationDocument: [],
   treatmentConsent: false,
   disclosureConsent: false,
-  privacyConsent: false,
+  privacyConsent: false
 };
 
-export const IdentificationTypes = [
-  "Birth Certificate",
-  "Driver's License",
-  "Medical Insurance Card/Policy",
-  "Military ID Card",
-  "National Identity Card",
-  "Passport",
-  "Resident Alien Card (Green Card)",
-  "Social Security Card",
-  "State ID Card",
-  "Student ID Card",
-  "Voter ID Card",
-];
+export const IdentificationTypes = ['Birth Certificate', "Driver's License", 'Medical Insurance Card/Policy', 'Military ID Card', 'National Identity Card', 'Passport', 'Resident Alien Card (Green Card)', 'Social Security Card', 'State ID Card', 'Student ID Card', 'Voter ID Card'];
 
 export const Doctors = [
   {
-    image: "/assets/images/dr-green.png",
-    name: "John Green",
+    image: '/assets/images/dr-green.png',
+    name: 'John Green'
   },
   {
-    image: "/assets/images/dr-cameron.png",
-    name: "Leila Cameron",
+    image: '/assets/images/dr-cameron.png',
+    name: 'Leila Cameron'
   },
   {
-    image: "/assets/images/dr-livingston.png",
-    name: "David Livingston",
+    image: '/assets/images/dr-livingston.png',
+    name: 'David Livingston'
   },
   {
-    image: "/assets/images/dr-peter.png",
-    name: "Evan Peter",
+    image: '/assets/images/dr-peter.png',
+    name: 'Evan Peter'
   },
   {
-    image: "/assets/images/dr-powell.png",
-    name: "Jane Powell",
+    image: '/assets/images/dr-powell.png',
+    name: 'Jane Powell'
   },
   {
-    image: "/assets/images/dr-remirez.png",
-    name: "Alex Ramirez",
+    image: '/assets/images/dr-remirez.png',
+    name: 'Alex Ramirez'
   },
   {
-    image: "/assets/images/dr-lee.png",
-    name: "Jasmine Lee",
+    image: '/assets/images/dr-lee.png',
+    name: 'Jasmine Lee'
   },
   {
-    image: "/assets/images/dr-cruz.png",
-    name: "Alyana Cruz",
+    image: '/assets/images/dr-cruz.png',
+    name: 'Alyana Cruz'
   },
   {
-    image: "/assets/images/dr-sharma.png",
-    name: "Hardik Sharma",
-  },
+    image: '/assets/images/dr-sharma.png',
+    name: 'Hardik Sharma'
+  }
 ];
 
 export const StatusIcon = {
-  scheduled: "/assets/icons/check.svg",
-  pending: "/assets/icons/pending.svg",
-  cancelled: "/assets/icons/cancelled.svg",
+  scheduled: '/assets/icons/check.svg',
+  pending: '/assets/icons/pending.svg',
+  cancelled: '/assets/icons/cancelled.svg'
 };
 ```
 
