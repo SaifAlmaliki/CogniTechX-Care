@@ -3,6 +3,7 @@
 import {Settings} from 'lucide-react';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import {useState} from 'react';
 
 import ChatComponent from '@/components/chatcomponent';
@@ -36,13 +37,15 @@ const Home = () => {
             {/* Header Section */}
             <header className="sticky top-0 z-10 mb-8 flex items-center justify-between border-b border-dark-400 bg-dark-300 py-4">
               <div className="flex items-center gap-2">
-                <Image
-                  src="/assets/icons/logo-full.svg"
-                  height={40}
-                  width={160}
-                  alt="CarePulse"
-                  className="h-10 w-fit"
-                />
+                <Link href="/" className="cursor-pointer">
+                  <Image
+                    src="/assets/icons/logo-full.svg"
+                    height={40}
+                    width={160}
+                    alt="CarePulse"
+                    className="h-10 w-fit hover:opacity-80"
+                  />
+                </Link>
               </div>
               <div className="flex items-center gap-4">
                 <Drawer>
