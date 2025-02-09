@@ -34,7 +34,14 @@ export async function POST(req: Request, res: Response) {
   const reportData: string = reqBody.data.reportData;
   const query = `Represent this for searching relevant passages: patient medical report says: \n${reportData}. \n\n${userQuestion}`;
 
-  const retrievals = await queryPineconeVectorStore(pinecone, 'medic', 'ns1', query);
+  let retrievals: string = "";
+  try {
+    retrievals = await queryPineconeVectorStore(pinecone, 'medic', 'ns1', query);
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error('Pinecone index error: ' + errorMsg);
+    retrievals = "No relevant clinical findings available.";
+  }
 
   const finalPrompt = `Here is a summary of a patient's clinical report, and a user query. Some generic clinical findings are also provided that may or may not be relevant for the report.
   Go through the clinical report and answer the user query.

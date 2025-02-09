@@ -8,6 +8,7 @@ import {Input} from './ui/input';
 import {Label} from './ui/label';
 import {Textarea} from './ui/textarea';
 
+
 type Props = {
   onReportConfirmation: (data: string) => void;
 };
@@ -23,6 +24,8 @@ const ReportComponent = ({onReportConfirmation}: Props) => {
   const [base64Data, setBase64Data] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [reportData, setReportData] = useState('');
+  const [filePreview, setFilePreview] = useState('');
+
   function handleReportSelection(event: ChangeEvent<HTMLInputElement>): void {
     // Step 1: Check if there are files in the event target
     if (!event.target.files) return;
@@ -49,7 +52,7 @@ const ReportComponent = ({onReportConfirmation}: Props) => {
       if (!(isValidImage || isValidDoc)) {
         toast({
           variant: 'destructive',
-          description: 'Filetype not supproted!'
+          description: 'File type not supported!'
         });
         return;
       }
@@ -62,6 +65,7 @@ const ReportComponent = ({onReportConfirmation}: Props) => {
           reader.onloadend = () => {
             const base64String = reader.result as string;
             setBase64Data(base64String);
+            setFilePreview(base64String);
             console.log(base64String);
           };
 
@@ -76,6 +80,7 @@ const ReportComponent = ({onReportConfirmation}: Props) => {
         reader.onloadend = () => {
           const base64String = reader.result as string;
           setBase64Data(base64String);
+          setFilePreview('');
           console.log(base64String);
         };
 
@@ -144,7 +149,7 @@ const ReportComponent = ({onReportConfirmation}: Props) => {
     setIsLoading(true);
 
     // Step 3: Send report to Gemini AI for processing
-    const response = await fetch('/api/ask-ai/extractreportgemini', {
+    const response = await fetch('/ask-ai/extractreportgemini', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -166,37 +171,58 @@ const ReportComponent = ({onReportConfirmation}: Props) => {
   }
 
   return (
-    // <div className="grid w-full items-start gap-6">
     <div className="grid w-full items-start gap-6 overflow-auto p-4 pt-0">
-      <fieldset className="relative grid gap-6 rounded-lg border p-4">
-        <legend className="text-sm font-medium">Report</legend>
-        {isLoading && <div className={'bg-card/90 absolute z-10 flex size-full flex-row items-center justify-center rounded-lg'}>extracting...</div>}
+      <fieldset className="relative grid gap-6 rounded-lg border border-dark-400 bg-dark-200 p-4">
+        <legend className="text-14-medium text-gray-200">Report</legend>
+        {isLoading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-dark-300/90">
+            <span className="text-gray-200">extracting...</span>
+          </div>
+        )}
+        
         <Input
           type="file"
-          // accept='image/*'
           onChange={handleReportSelection}
+          className="text-14-regular border-dark-400 bg-dark-300 text-gray-200 file:bg-green-500 file:text-white hover:file:bg-green-600"
         />
-        <Button onClick={extractDetails}>1. Upload File</Button>
-        <Label>Report Summary</Label>
+        
+        {filePreview && filePreview.startsWith('data:image') && (
+          <img 
+            src={filePreview} 
+            alt="Report Preview" 
+            className="max-h-64 w-full rounded-md object-contain shadow-md" 
+          />
+        )}
+        
+        <Button 
+          onClick={extractDetails}
+          className="text-14-medium bg-green-500 text-white hover:bg-green-600"
+        >
+          1. Upload and Analyze Report
+        </Button>
+        
+        <Label className="text-14-medium text-gray-200">Report Summary</Label>
         <Textarea
           value={reportData}
           onChange={e => {
             setReportData(e.target.value);
           }}
           placeholder="Extracted data from the report will appear here. Get better recommendations by providing additional patient history and symptoms..."
-          className="min-h-72 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
+          className="text-14-regular min-h-72 resize-none border-0 bg-dark-300 p-3 text-gray-200 placeholder:text-gray-600 shadow-none focus-visible:ring-0"
         />
+        
         <Button
-          variant="destructive"
-          className="bg-[#D90013]"
+          variant="default"
+          className="text-14-medium bg-green-500 text-white hover:bg-green-600"
           onClick={() => {
             onReportConfirmation(reportData);
           }}
         >
           2. Looks Good
         </Button>
-        <div className="flex flex-row items-center justify-center gap-2 p-4">
-          <Label>Share your thoughts </Label>
+        
+        <div className="flex flex-row items-center justify-center gap-2 border-t border-dark-400 p-4">
+          <Label className="text-14-regular text-gray-600">Share your thoughts</Label>
           <SocialMediaLinks />
         </div>
       </fieldset>

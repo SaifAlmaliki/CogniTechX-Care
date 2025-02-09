@@ -1,10 +1,11 @@
 'use client';
 
 import {Settings} from 'lucide-react';
+import Head from 'next/head';
+import Image from 'next/image';
 import {useState} from 'react';
 
 import ChatComponent from '@/components/chatcomponent';
-import {ModeToggle} from '@/components/modetoggle';
 import ReportComponent from '@/components/ReportComponent';
 import {Button} from '@/components/ui/button';
 import {Drawer, DrawerContent, DrawerTrigger} from '@/components/ui/drawer';
@@ -24,51 +25,60 @@ const Home = () => {
   };
 
   return (
-    <div className="grid h-screen w-full">
-      <div className="flex flex-col">
-        {/* Step 1: Header Section */}
-        <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-white px-4 dark:bg-dark-300">
-          {/* Branding */}
-          <h1 className="text-xl font-semibold text-[#D90013]">
-            <span className="flex flex-row">CognitechX Care</span>
-          </h1>
+    <>
+      <Head>
+        <title>CarePulse - Ask AI</title>
+        <meta name="description" content="Analyze medical reports using Gemini AI" />
+      </Head>
+      <div className="flex h-screen max-h-screen bg-dark-300">
+        <div className="remove-scrollbar container mx-auto">
+          <div className="sub-container">
+            {/* Header Section */}
+            <header className="sticky top-0 z-10 mb-8 flex items-center justify-between border-b border-dark-400 bg-dark-300 py-4">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/assets/icons/logo-full.svg"
+                  height={40}
+                  width={160}
+                  alt="CarePulse"
+                  className="h-10 w-fit"
+                />
+              </div>
+              <div className="flex items-center gap-4">
+                <Drawer>
+                  <DrawerTrigger asChild>
+                    <Button variant="ghost" size="icon" className="md:hidden">
+                      <Settings className="text-white" />
+                      <span className="sr-only">Settings</span>
+                    </Button>
+                  </DrawerTrigger>
+                  <DrawerContent className="max-h-[80vh]">
+                    <ReportComponent onReportConfirmation={onReportConfirmation} />
+                  </DrawerContent>
+                </Drawer>
+              </div>
+            </header>
 
-          {/* Header Controls */}
-          <div className="flex w-full flex-row justify-end gap-2">
-            <ModeToggle />
-            {/* Mobile Drawer for Settings */}
-            <Drawer>
-              <DrawerTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <Settings />
-                  <span className="sr-only">Settings</span>
-                </Button>
-              </DrawerTrigger>
-              <DrawerContent className="max-h-[80vh]">
+            {/* Main Content Area */}
+            <main className="grid flex-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Sidebar for Report Management (Desktop Only) */}
+              <div className="hidden flex-col md:flex">
                 <ReportComponent onReportConfirmation={onReportConfirmation} />
-              </DrawerContent>
-            </Drawer>
-          </div>
-        </header>
+              </div>
+              {/* Chat Interface */}
+              <div className="lg:col-span-2">
+                <ChatComponent reportData={reportData} />
+              </div>
+            </main>
 
-        {/* Step 2: Main Content Area */}
-        <main
-          className="grid flex-1 gap-4 overflow-auto p-4
-          md:grid-cols-2
-          lg:grid-cols-3"
-        >
-          {/* Step 2.1: Sidebar - Report Management (Desktop Only) */}
-          <div className="hidden flex-col md:flex">
-            <ReportComponent onReportConfirmation={onReportConfirmation} />
+            {/* Footer */}
+            <div className="text-14-regular mt-8 flex justify-between border-t border-dark-400 py-4">
+              <p className="text-gray-400"> 2025 CarePulse</p>
+            </div>
           </div>
-
-          {/* Step 2.2: Chat Interface */}
-          <div className="lg:col-span-2">
-            <ChatComponent reportData={reportData} />
-          </div>
-        </main>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

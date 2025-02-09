@@ -25,16 +25,30 @@ const prompt = `You are analyzing an image of a clinical report.
 ## Potential Treatments:
 `;
 
-export async function POST(req: Request, res: Response) {
-  const {base64} = await req.json();
-  const filePart = fileToGenerativePart(base64);
+export async function POST(req: Request) {
+  try {
+    const { base64 } = await req.json();
+    if (!base64) {
+      return new Response('Missing report file data', { status: 400 });
+    }
 
-  console.log(filePart);
-  const generatedContent = await model.generateContent([prompt, filePart]);
+    const filePart = fileToGenerativePart(base64);
+    console.log('filePart:', filePart);
 
-  console.log(generatedContent);
-  const textResponse = generatedContent.response.candidates![0].content.parts[0].text;
-  return new Response(textResponse, {status: 200});
+    const generatedContent = await model.generateContent([prompt, filePart]);
+    console.log('generatedContent:', generatedContent);
+
+    const candidate = generatedContent.response.candidates && generatedContent.response.candidates[0];
+    if (!candidate) {
+      return new Response('No candidate response from AI', { status: 500 });
+    }
+
+    const textResponse = candidate.content.parts[0].text;
+    return new Response(textResponse, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new Response('Error processing the report', { status: 500 });
+  }
 }
 
 function fileToGenerativePart(imageData: string) {
