@@ -64,7 +64,8 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
               height={24}
               width={24}
               alt={props.iconAlt || "icon"}
-              className="ml-2"
+              className="ml-2 w-6 h-6"
+              style={{ width: 'auto', height: 'auto' }}
             />
           )}
           <FormControl>

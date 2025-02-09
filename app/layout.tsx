@@ -15,7 +15,16 @@ export const metadata: Metadata = {
   title: 'CogniTechX Care',
   description: 'A healthcare patient management System designed to streamline patient registration, appointment scheduling, and medical records management for healthcare providers.',
   icons: {
-    icon: '/assets/icons/logo-icon.svg'
+    icon: [
+      {
+        url: '/assets/icons/logo-icon.svg',
+        type: 'image/svg+xml',
+      },
+      {
+        url: '/favicon.ico',
+        sizes: 'any',
+      }
+    ]
   }
 };
 
@@ -25,8 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn('min-h-screen bg-dark-300 font-sans antialiased', fontSans.variable)}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn('min-h-screen bg-dark-300 font-sans antialiased', fontSans.variable)} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark">
           {children}
         </ThemeProvider>
